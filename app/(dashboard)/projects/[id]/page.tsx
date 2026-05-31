@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import Link from 'next/link'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import {
   MapPin, Calendar, DollarSign, User, LayoutGrid,
   CheckSquare, AlertTriangle, FileText, ArrowLeft, Edit
@@ -21,8 +21,6 @@ export const dynamic = 'force-dynamic'
 
 export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
 
   const [
     { data: project },

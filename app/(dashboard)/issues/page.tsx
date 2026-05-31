@@ -14,6 +14,7 @@ import {
 } from '@/lib/utils'
 import { AlertTriangle, Plus } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useCurrentUser } from '@/lib/use-current-user'
 
 const SEVERITIES = ['low','medium','high','critical'] as const
 const STATUSES = ['open','in_progress','resolved','closed'] as const
@@ -34,6 +35,7 @@ export default function IssuesPage() {
 
 function IssuesPageInner() {
   const supabase = createClient()
+  const { canEdit } = useCurrentUser()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''
 
@@ -97,7 +99,7 @@ function IssuesPageInner() {
       <Header
         title="工程問題"
         subtitle={`共 ${filtered.length} 筆`}
-        actions={<Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增問題</Button>}
+        actions={canEdit && <Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增問題</Button>}
       />
       <div className="flex-1 p-8 space-y-6">
         {/* Summary chips */}

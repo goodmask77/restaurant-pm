@@ -9,11 +9,13 @@ import { Modal } from '@/components/ui/Modal'
 import type { Contractor } from '@/lib/supabase/types'
 import { Users, Star, Phone, Mail, Plus } from 'lucide-react'
 import { WORK_CATEGORIES } from '@/lib/utils'
+import { useCurrentUser } from '@/lib/use-current-user'
 
 const SPECIALTY_OPTIONS = WORK_CATEGORIES.filter(c => c !== '驗收')
 
 export default function ContractorsPage() {
   const supabase = createClient()
+  const { canEdit } = useCurrentUser()
   const [contractors, setContractors] = useState<Contractor[]>([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
@@ -64,7 +66,7 @@ export default function ContractorsPage() {
       <Header
         title="承包商管理"
         subtitle={`共 ${contractors.length} 間`}
-        actions={<Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增承包商</Button>}
+        actions={canEdit && <Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增承包商</Button>}
       />
       <div className="flex-1 p-8">
         {loading ? (

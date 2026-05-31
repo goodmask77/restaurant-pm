@@ -3,7 +3,7 @@ import { Header } from '@/components/layout/Header'
 import { Card } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { getSessionUser } from '@/lib/auth'
 import { Plus, MapPin, Calendar, DollarSign, User } from 'lucide-react'
 import {
   formatCurrency, formatDate,
@@ -16,8 +16,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const canEdit = !!getSessionUser()
 
   const { data: projects } = await supabase
     .from('projects')
@@ -40,13 +39,15 @@ export default async function ProjectsPage() {
         title="專案管理"
         subtitle={`共 ${projectList.length} 個專案`}
         actions={
-          <Link
-            href="/projects/new"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            新增專案
-          </Link>
+          canEdit && (
+            <Link
+              href="/projects/new"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              新增專案
+            </Link>
+          )
         }
       />
 
@@ -55,14 +56,16 @@ export default async function ProjectsPage() {
           <div className="flex flex-col items-center justify-center h-64 text-slate-400">
             <div className="text-6xl mb-4">🏗️</div>
             <p className="text-lg font-medium text-slate-600 mb-2">還沒有任何專案</p>
-            <p className="text-sm mb-6">建立第一個餐廳工程專案開始管理</p>
-            <Link
-              href="/projects/new"
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              建立專案
-            </Link>
+            <p className="text-sm mb-6">{canEdit ? '建立第一個餐廳工程專案開始管理' : '登入後即可建立專案'}</p>
+            {canEdit && (
+              <Link
+                href="/projects/new"
+                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                建立專案
+              </Link>
+            )}
           </div>
         ) : (
           <div className="space-y-8">

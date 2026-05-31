@@ -11,6 +11,7 @@ import type { BudgetItem, Project, Contractor } from '@/lib/supabase/types'
 import { formatCurrency, WORK_CATEGORIES, PAYMENT_STATUS_LABEL, PAYMENT_STATUS_COLOR } from '@/lib/utils'
 import { DollarSign, Plus, TrendingUp, TrendingDown } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useCurrentUser } from '@/lib/use-current-user'
 
 const PAYMENT_STATUSES = ['pending','partial','paid'] as const
 
@@ -24,6 +25,7 @@ export default function BudgetPage() {
 
 function BudgetPageInner() {
   const supabase = createClient()
+  const { canEdit } = useCurrentUser()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''
 
@@ -97,7 +99,7 @@ function BudgetPageInner() {
     <div className="flex flex-col h-full">
       <Header
         title="預算追蹤"
-        actions={<Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增費用</Button>}
+        actions={canEdit && <Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增費用</Button>}
       />
       <div className="flex-1 p-8 space-y-6">
         {/* Project filter */}

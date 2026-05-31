@@ -14,6 +14,7 @@ import {
 import type { Task, Project, Contractor } from '@/lib/supabase/types'
 import { Plus, Filter, CheckSquare } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useCurrentUser } from '@/lib/use-current-user'
 
 const PRIORITIES = ['low','medium','high','urgent'] as const
 const PRIORITY_LABEL = { low:'低', medium:'中', high:'高', urgent:'緊急' }
@@ -29,6 +30,7 @@ export default function TasksPage() {
 
 function TasksPageInner() {
   const supabase = createClient()
+  const { canEdit } = useCurrentUser()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''
 
@@ -106,9 +108,11 @@ function TasksPageInner() {
         title="工程項目"
         subtitle={`共 ${filtered.length} 筆`}
         actions={
-          <Button onClick={() => setModalOpen(true)} size="sm">
-            <Plus className="w-4 h-4" /> 新增工項
-          </Button>
+          canEdit && (
+            <Button onClick={() => setModalOpen(true)} size="sm">
+              <Plus className="w-4 h-4" /> 新增工項
+            </Button>
+          )
         }
       />
       <div className="flex-1 p-8">

@@ -10,6 +10,7 @@ import type { DailyReport, Project } from '@/lib/supabase/types'
 import { formatDate } from '@/lib/utils'
 import { FileText, Plus, CloudSun, Users } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useCurrentUser } from '@/lib/use-current-user'
 
 const WEATHER_OPTIONS = ['晴天', '多雲', '陰天', '小雨', '大雨', '颱風', '其他']
 
@@ -23,6 +24,7 @@ export default function ReportsPage() {
 
 function ReportsPageInner() {
   const supabase = createClient()
+  const { canEdit } = useCurrentUser()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''
 
@@ -85,7 +87,7 @@ function ReportsPageInner() {
       <Header
         title="工地日報"
         subtitle={`共 ${filtered.length} 筆`}
-        actions={<Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增日報</Button>}
+        actions={canEdit && <Button size="sm" onClick={() => setModalOpen(true)}><Plus className="w-4 h-4" /> 新增日報</Button>}
       />
       <div className="flex-1 p-8 space-y-6">
         <select value={filterProject} onChange={e => setFilterProject(e.target.value)}

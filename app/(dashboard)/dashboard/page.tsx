@@ -5,7 +5,6 @@ import { StatCard } from '@/components/ui/StatCard'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import { FolderOpen, CheckSquare, AlertTriangle, DollarSign, ArrowRight } from 'lucide-react'
 import { formatCurrency, formatDate, PROJECT_STATUS_LABEL, PROJECT_STATUS_COLOR, ISSUE_SEVERITY_COLOR, ISSUE_SEVERITY_LABEL } from '@/lib/utils'
 import type { Project, Issue } from '@/lib/supabase/types'
@@ -14,7 +13,6 @@ export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
   const user = getSessionUser()
-  if (!user) redirect('/login')
 
   const supabase = createClient()
 
@@ -44,7 +42,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col h-full">
-      <Header title="專案總覽" subtitle={`歡迎回來，${user.display_name ?? user.username}`} />
+      <Header title="專案總覽" subtitle={user ? `歡迎回來，${user.display_name ?? user.username}` : '訪客瀏覽模式（唯讀）'} />
 
       <div className="flex-1 p-8 space-y-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
