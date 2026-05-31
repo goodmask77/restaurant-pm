@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/layout/Header'
 import { Card, CardContent } from '@/components/ui/Card'
@@ -20,6 +20,14 @@ const PRIORITY_LABEL = { low:'低', medium:'中', high:'高', urgent:'緊急' }
 const STATUS_OPTIONS = ['pending','in_progress','completed','blocked'] as const
 
 export default function TasksPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-slate-400">載入中…</div>}>
+      <TasksPageInner />
+    </Suspense>
+  )
+}
+
+function TasksPageInner() {
   const supabase = createClient()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/layout/Header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -15,6 +15,14 @@ import { useSearchParams } from 'next/navigation'
 const PAYMENT_STATUSES = ['pending','partial','paid'] as const
 
 export default function BudgetPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-slate-400">載入中…</div>}>
+      <BudgetPageInner />
+    </Suspense>
+  )
+}
+
+function BudgetPageInner() {
   const supabase = createClient()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''

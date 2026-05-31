@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/layout/Header'
 import { Button } from '@/components/ui/Button'
@@ -25,6 +25,14 @@ const STATUS_COLOR: Record<string, string> = {
 }
 
 export default function IssuesPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-slate-400">載入中…</div>}>
+      <IssuesPageInner />
+    </Suspense>
+  )
+}
+
+function IssuesPageInner() {
   const supabase = createClient()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''

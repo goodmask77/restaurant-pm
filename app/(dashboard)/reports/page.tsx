@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Header } from '@/components/layout/Header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -14,6 +14,14 @@ import { useSearchParams } from 'next/navigation'
 const WEATHER_OPTIONS = ['晴天', '多雲', '陰天', '小雨', '大雨', '颱風', '其他']
 
 export default function ReportsPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-slate-400">載入中…</div>}>
+      <ReportsPageInner />
+    </Suspense>
+  )
+}
+
+function ReportsPageInner() {
   const supabase = createClient()
   const searchParams = useSearchParams()
   const defaultProject = searchParams.get('project') ?? ''
