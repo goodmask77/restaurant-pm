@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js Dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "PATH=/Users/wayz/nodejs/node/bin:$PATH arch -x86_64 node /Users/wayz/nodejs/node/bin/npm run dev"],
+      "port": 3000
+    }
+  ]
+}
